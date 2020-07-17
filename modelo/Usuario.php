@@ -12,7 +12,7 @@ class Usuario extends Conexion {
     private $ci_persona;
     private $idTipoUsuario;
 
-    private function iniciar() {
+    public function iniciar() {
 
         $sql = "SELECT login($1,$2)";
         $con = $this->conectar();
