@@ -1,3 +1,3 @@
 <?php
 
-header("Location: controlador/CtrlInicioSesion.php");
+header("Location: vista/login.html");

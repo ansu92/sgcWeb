@@ -1,9 +1,21 @@
 <?php
 
-header("Location: ../vista/login.html");
+session_start();
 
-include 'modelo/Conexion.php';
+require_once '../modelo/Usuario.php';
 
-class CtrlInicioSesion {
-    
+$usuario = new Usuario();
+
+switch($_REQUEST["accion"]) {
+    case "iniciar":
+        $usuario->setUsuario($_POST['usuario']);
+        $usuario->setPassword($_POST['clave']);
+        $resul = $usuario->iniciar();
+        
+        if ($resul) {
+            $_SESSION["usuario"] = $usuario.getUsuario();
+            $_SESSION["clave"] = $usuario.getClave();
+        }
+        
+        header("Location: ../vista/VisInicioSesion");
 }

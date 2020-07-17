@@ -1,26 +1,39 @@
 <?php
 
 class Conexion {
-    private $conn;
-    private $host;
-    private $port;
-    private $bd;
-    private $usuario;
-    private $clave;
-    
-    function ini() {
-        $bd = "localhost";
-        $bd = "5432";
-        $bd = "sgc";
-        $usuario = "postgres";
-        $clave = "1234";
+
+    public static $conn;
+
+    public static function conectar() {
+
+        if (!isset(self::$conn)) {
+
+            try {
+                include_once '../general/config.php';
+
+                self::$conn = new PDO("pgsql:host=" . SERVIDOR . "; dbname=" . BD, USUARIO, CLAVE);
+                self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                self::$conn->exec("SET NAMES 'UTF8'");
+            } catch (PDOException $ex) {
+
+                print "ERROR" . $ex->getMessage() . "<BR>";
+            }
+        }
     }
-    
-    function conectar() {
-        return pg_connect("port="+$port+" dbname="+$bd+" user="+$usuario+" password="+$clave);
+
+    public static function desconectar() {
+        if (isset(self::$conn)) {
+            self::$conn = null;
+        }
     }
-    
-    function desconectar() {
-        pg_close();
+
+    public static function getConexion() {
+
+        if (isset(self::$conn)) {
+            echo 'Conexión establecida';
+        } else {
+            echo 'No se pudo conectar a la BD';
+        }
     }
+
 }
