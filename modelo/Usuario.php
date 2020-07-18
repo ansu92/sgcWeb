@@ -2,7 +2,7 @@
 
 require_once("Conexion.php");
 
-class Usuario extends Conexion {
+class Usuario {
 
     private $id;
     private $usuario;
@@ -13,13 +13,31 @@ class Usuario extends Conexion {
     private $idTipoUsuario;
 
     public function iniciar() {
+        $sql = "SELECT login('" . $this->usuario . "',md5('" . $this->password . "'));";
+        echo $sql;
+        Conexion::conectar();
+        $con = Conexion::getConexion();
+        foreach ($con->query($sql) as $rs){
+        $bool = $rs['login'];
+        echo "conecta<br>";
+        }
+        echo $bool;
 
-        $sql = "SELECT login($1,$2)";
-        $con = $this->conectar();
-        pg_prepare("", $sql);
-        pg_query_params($sql, array($this->usuario, $this->password));
-        $result->pg_fetch_result($result, "login");
-        return $result;
+        if ($bool) {
+            echo 'poli sep';
+        } else {
+            echo 'poli nope';
+        }
+//
+//        $st = $con->prepare($sql);
+//        $rs = $st->execute();
+//        echo "<br>".$rs;
+//        $result = $rs->fetchAll();
+//        return $result['login'];
+
+//        pg_prepare("", $sql);
+//        $result = pg_query_params($sql, array($this->usuario, $this->password));
+//        pg_fetch_result($result, "login");
     }
 
     function getId() {

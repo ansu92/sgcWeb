@@ -31,6 +31,9 @@ class Conexion {
 
         if (isset(self::$conn)) {
             echo 'Conexión establecida';
+            
+            return self::$conn;
+            
         } else {
             echo 'No se pudo conectar a la BD';
         }
