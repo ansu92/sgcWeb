@@ -16,27 +16,11 @@ class Usuario {
         $sql = "SELECT login('" . $this->usuario . "',md5('" . $this->password . "'));";
         echo $sql;
         $con = Conexion::getConexion();
-        foreach ($con->query($sql) as $rs){
-        $bool = $rs['login'];
-        echo "conecta<br>";
+        foreach ($con->query($sql) as $rs) {
+            $bool = $rs['login'];
+            echo "conecta<br>";
         }
-        echo $bool;
-
-        if ($bool) {
-            echo 'poli sep';
-        } else {
-            echo 'poli nope';
-        }
-//
-//        $st = $con->prepare($sql);
-//        $rs = $st->execute();
-//        echo "<br>".$rs;
-//        $result = $rs->fetchAll();
-//        return $result['login'];
-
-//        pg_prepare("", $sql);
-//        $result = pg_query_params($sql, array($this->usuario, $this->password));
-//        pg_fetch_result($result, "login");
+        return $bool;
     }
 
     function getId() {
