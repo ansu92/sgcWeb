@@ -7,6 +7,7 @@ require_once '../modelo/Usuario.php';
 $usuario = new Usuario();
 
 switch($_REQUEST["accion"]) {
+    
     case "iniciar":
         $usuario->setUsuario($_POST['usuario']);
         $usuario->setPassword($_POST['clave']);
@@ -17,5 +18,5 @@ switch($_REQUEST["accion"]) {
             $_SESSION["clave"] = $usuario.getClave();
         }
         
-        header("Location: ../vista/VisInicioSesion");
+        header("Location: ../vista/inicio.html");
 }

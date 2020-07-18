@@ -15,7 +15,6 @@ class Usuario {
     public function iniciar() {
         $sql = "SELECT login('" . $this->usuario . "',md5('" . $this->password . "'));";
         echo $sql;
-        Conexion::conectar();
         $con = Conexion::getConexion();
         foreach ($con->query($sql) as $rs){
         $bool = $rs['login'];

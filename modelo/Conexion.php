@@ -9,8 +9,8 @@ class Conexion {
         if (!isset(self::$conn)) {
 
             try {
-                include_once '../general/config.php';
 
+                include_once '../general/config.php';
                 self::$conn = new PDO("pgsql:host=" . SERVIDOR . "; dbname=" . BD, USUARIO, CLAVE);
                 self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 self::$conn->exec("SET NAMES 'UTF8'");
@@ -22,21 +22,22 @@ class Conexion {
     }
 
     public static function desconectar() {
+
         if (isset(self::$conn)) {
+
             self::$conn = null;
         }
     }
 
     public static function getConexion() {
 
-        if (isset(self::$conn)) {
-            echo 'Conexión establecida';
-            
-            return self::$conn;
-            
-        } else {
-            echo 'No se pudo conectar a la BD';
+        if (!isset(self::$conn)) {
+
+            conectar();
         }
+
+        echo 'Conexión establecida';
+        return self::$conn;
     }
 
 }

@@ -11,7 +11,26 @@ class Persona {
     private $sApellido;
     private $telefono;
     private $correo;
-    
+
+    public function buscarPersona() {
+        $sql = "SELECT cedula, p_nombre, s_nombre, p_apellido, s_apellido, telefono, correo FROM persona WHERE cedula = ?";
+        $con = Conexion::getConexion();
+        $st = $con->prepare($sql);
+        $rs = $st->execute([$this->cedula]);
+
+        if ($rs->fetch()) {
+            $this->nombre = rs['p_nombre'];
+            $this->sNombre = rs['s_nombre'];
+            $this->apellido = rs['p_apellido'];
+            $this->s_apellido = rs['p_nombre'];
+            $this->telefono = rs['telefono'];
+            $this->correo = rs['correo'];
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     function getCedula() {
         return $this->cedula;
     }
