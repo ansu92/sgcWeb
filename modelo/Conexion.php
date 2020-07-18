@@ -33,7 +33,7 @@ class Conexion {
 
         if (!isset(self::$conn)) {
 
-            conectar();
+            self::conectar();
         }
 
         echo 'Conexión establecida';
