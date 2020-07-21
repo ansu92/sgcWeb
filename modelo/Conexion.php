@@ -9,11 +9,12 @@ class Conexion {
         if (!isset(self::$conn)) {
 
             try {
-
                 include_once '../general/config.php';
+
                 self::$conn = new PDO("pgsql:host=" . SERVIDOR . "; dbname=" . BD, USUARIO, CLAVE);
                 self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 self::$conn->exec("SET NAMES 'UTF8'");
+                return self::$conn;
             } catch (PDOException $ex) {
 
                 print "ERROR" . $ex->getMessage() . "<BR>";
@@ -22,22 +23,9 @@ class Conexion {
     }
 
     public static function desconectar() {
-
         if (isset(self::$conn)) {
-
             self::$conn = null;
         }
-    }
-
-    public static function getConexion() {
-
-        if (!isset(self::$conn)) {
-
-            self::conectar();
-        }
-
-        echo 'Conexión establecida';
-        return self::$conn;
     }
 
 }

@@ -1,36 +1,47 @@
 <?php
 
-require_once './Conexion.php';
+require_once 'Conexion.php';
 
 class Persona {
 
-    private $cedula;
-    private $nombre;
-    private $sNombre;
-    private $apellido;
-    private $sApellido;
-    private $telefono;
-    private $correo;
+    protected $cedula;
+    protected $nombre;
+    protected $sNombre;
+    protected $apellido;
+    protected $sApellido;
+    protected $telefono;
+    protected $correo;
 
-    public function buscarPersona() {
-        $sql = "SELECT cedula, p_nombre, s_nombre, p_apellido, s_apellido, telefono, correo FROM persona WHERE cedula = ?";
-        $con = Conexion::getConexion();
+    public function existePersona() {
+
+        $sql = 'SELECT cedula FROM persona WHERE cedula = ?;';
+        $con = Conexion::conectar();
         $st = $con->prepare($sql);
-        $rs = $st->execute([$this->cedula]);
 
-        if ($rs->fetch()) {
-            $this->nombre = rs['p_nombre'];
-            $this->sNombre = rs['s_nombre'];
-            $this->apellido = rs['p_apellido'];
-            $this->s_apellido = rs['p_nombre'];
-            $this->telefono = rs['telefono'];
-            $this->correo = rs['correo'];
+        $st->bindParam(1, $this->cedula);
+        $st->execute();
+        Conexion::desconectar();
+
+        if ($st->fetch()) {
             return true;
+        
         } else {
             return false;
         }
-    }
 
+    }
+    
+    public function toArray() {
+        $array['cedula'] = $this->cedula;
+        $array['nombre'] = $this->nombre;
+        $array['s_nombre'] = $this->sNombre;
+        $array['apellido'] = $this->apellido;
+        $array['s_apellido'] = $this->sApellido;
+        $array['telefono'] = $this->telefono;
+        $array['correo'] = $this->correo;
+        return $array;
+    }
+    
     function getCedula() {
         return $this->cedula;
     }

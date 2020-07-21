@@ -1,6 +1,8 @@
 <?php
 
-require_once("Conexion.php");
+require_once 'Conexion.php';
+require_once 'TipoUsuario.php';
+require_once 'Persona.php';
 
 class Usuario {
 
@@ -9,16 +11,68 @@ class Usuario {
     private $password;
     private $pregunta;
     private $respuesta;
-    private $ci_persona;
-    private $idTipoUsuario;
+    private $persona;
+    private $tipo;
 
-    public function iniciar() {
-        $sql = "SELECT login('" . $this->usuario . "',md5('" . $this->password . "'));";
-        $con = Conexion::getConexion();
-        foreach ($con->query($sql) as $rs) {
-            $bool = $rs['login'];
+    public function __construct() {
+
+        $this->persona = new Persona();
+        $this->tipo = new TipoUsuario();
+    }
+
+    public function iniciar() : bool {
+
+        $sql = "SELECT login(?,md5(?));";
+        $con = Conexion::conectar();
+        $st = $con->prepare($sql);
+
+        $ind = 1;
+        $st->bindParam($ind++, $this->usuario);
+        $st->bindParam($ind++, $this->password);
+        $st->execute();
+
+        Conexion::desconectar();
+        
+        $rs = $st->fetch();
+        $resul = $rs['login'];
+
+        if($resul) {
+            $this->buscarPerfil();
         }
-        return $bool;
+
+        $this->password = null;
+
+        return $resul;
+    }
+
+    public function buscarPerfil() : bool {
+        $sql = "SELECT * FROM v_perfil WHERE usuario = ?;";
+        $con = Conexion::conectar();
+        $st = $con->prepare($sql);
+        $st->bindParam(1, $this->usuario);
+        $st->execute();
+        Conexion::desconectar();
+
+        if ($rs = $st->fetch()) {
+            $this->persona->setNombre($rs['p_nombre']);
+            $this->persona->setSNombre($rs['s_nombre']);
+            $this->persona->setApellido($rs['p_apellido']);
+            $this->persona->setSApellido($rs['s_apellido']);
+            $this->persona->setTelefono($rs['telefono']);
+            $this->persona->setCorreo($rs['correo']);
+            return true;
+
+        } else {
+            return false;
+        }
+    }
+    
+    public function toArray() {
+        $array['id'] = $this->id;
+        $array['usuario'] = $this->usuario;
+        $array['persona'] = $this->persona->toArray();
+        $array['tipo'] = $this->tipo->toArray();
+        return $array;
     }
 
     function getId() {
@@ -41,12 +95,12 @@ class Usuario {
         return $this->respuesta;
     }
 
-    function getCi_persona() {
-        return $this->ci_persona;
+    function getPersona() {
+        return $this->persona;
     }
 
-    function getIdTipUsuario() {
-        return $this->idTipoUsuario;
+    function getTipoUsuario() {
+        return $this->tipoUsuario;
     }
 
     function setId($id): void {
@@ -69,12 +123,12 @@ class Usuario {
         $this->respuesta = $respuesta;
     }
 
-    function setCi_persona($ci_persona): void {
-        $this->ci_persona = $ci_persona;
+    function setPersona($persona): void {
+        $this->persona = $persona;
     }
 
-    function setIdTipoUsuario($idTipoUsuario): void {
-        $this->idTipoUsuario = $idTipoUsuario;
+    function setTipoUsuario($tipoUsuario): void {
+        $this->tipoUsuario = $tipoUsuario;
     }
 
 }
