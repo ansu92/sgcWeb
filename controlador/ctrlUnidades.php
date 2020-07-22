@@ -1,39 +1,48 @@
 <?php
-session_start();
 
+require_once '../modelo/Propietario.php';
 require_once '../modelo/Unidad.php';
 
-$unidades = $_SESSION[unidades];
+class ctrlUnidades {
 
-function llenarUnidades() {
+    public function cargarUnidades() {
+        $propietario = new Propietario($_SESSION['cedula']);
+        $numUnidades = $propietario->buscarUnidades();
 
-    foreach ($unidades as $item) {
-        ?>
-        <?php
+        for ($i = 0, $col = 1; $i < $numUnidades; $i++) {
+
+
+            if ($col == 3) {
+                echo '
+        <! -- ROW OF PANELS -->
+        <div class="row">
+        ';
+            }
+            echo '
+            <div class="col-md-4 col-sm-4 mb">
+                <a href="habitantes.php?unidad=' . $propietario->getUnidades()[$i]->getNumero() . '">
+                    <div class="darkblue-panel pn">
+                        <div class="darkblue-header">
+                            <h5>' . $propietario->getUnidades()[$i]->getNumero() . '</h5>
+                        </div>
+                        <h1 class="mt"><i class="fa fa-home fa-3x"></i></h1>
+                        <footer>
+                            <div class="centered">
+                                <h5><i class="fa fa-user"></i> ' . $propietario->getUnidades()[$i]->getNumHabitantes() . ' Habitante(s)</h5>
+                            </div>
+                        </footer>
+                    </div><! -- /darkblue panel -->
+                </a>
+            </div><!-- /col-md-4 -->
+';
+        }
+
+        if ($col == 0) {
+            echo '
+        </div><!-- /END ROW OF PANELS -->
+        ';
+            $col = 1;
+        }
     }
-}
 
-function llenarTabla() {
-    foreach ($unidades as $item) {
-        ?>
-        <tr>
-            <td>Company Ltd</td>
-            <td class="hidden-phone"><?php $item->getN_unidad ?></td>
-            <td>12000.00$ </td>
-            <td>
-                <button class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></button>
-                <button class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
-            </td>
-        </tr>
-        <tr>
-            <td>Dashgum co</td>
-            <td class="hidden-phone">Lorem Ipsum dolor</td>
-            <td>17900.00$ </td>
-            <td>
-                <button class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></button>
-                <button class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
-            </td>
-        </tr>
-        <?php
-    }
 }

@@ -9,10 +9,4 @@ $usuario = new Usuario();
 $usuario->setUsuario($_SESSION['usuario']);
 $usuario->buscarPerfil();
 
-$propietario = new Propietario();
-$propietario->setCedula($usuario->getCedula());
-$propietario->buscarUnidades();
-
-$_SESSION['unidades'] = $propietario->getUnidades();
-
 header('Location: ../vista/inicio.php');

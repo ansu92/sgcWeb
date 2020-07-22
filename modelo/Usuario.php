@@ -54,6 +54,7 @@ class Usuario {
         Conexion::desconectar();
 
         if ($rs = $st->fetch()) {
+            $this->persona->setCedula($rs['cedula']);
             $this->persona->setNombre($rs['p_nombre']);
             $this->persona->setSNombre($rs['s_nombre']);
             $this->persona->setApellido($rs['p_apellido']);

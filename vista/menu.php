@@ -17,22 +17,22 @@ session_start();
 
             <li class="mt">
                 <a class="active" href="inicio.php">
-                    <i class="fa fa-dashboard"></i>
+                    <i class="fa fa-home"></i>
                     <span>Inicio</span>
                 </a>
             </li>
 
             <li class="sub">
                 <a href="deudas.php">
-                    <i class="fa fa-dashboard"></i>
+                    <i class="fa fa-money"></i>
                     <span>Deudas</span>
                 </a>
             </li>
 
             <li class="sub">
-                <a href="unidad.php">
-                    <i class="fa fa-dashboard"></i>
-                    <span>Unidad</span>
+                <a href="unidades.php">
+                    <i class="fa fa-building"></i>
+                    <span>Unidades</span>
                 </a>
             </li>
 

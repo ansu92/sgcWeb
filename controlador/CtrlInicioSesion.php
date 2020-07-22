@@ -7,7 +7,6 @@ require_once '../modelo/Propietario.php';
 require_once '../modelo/Unidad.php';
 
 $usuario = new Usuario();
-$propietario = new Propietario();
 $unidades;
 
 switch ($_REQUEST["accion"]) {
@@ -17,24 +16,19 @@ switch ($_REQUEST["accion"]) {
         $usuario->setPassword($_POST['clave']);
 
         if ($usuario->iniciar()) {
-            
-            $_SESSION['usuario'] = $usuario->toArray();
-            
-            $propietario->setCedula($usuario->getPersona()->getCedula());
-            $propietario->buscarPropietario();
-            $propietario->buscarUnidades();
-            $_SESSION['propietario'] = $propietario->toArray();
-            
-            $unidades = $propietario->getUnidades();
-            
+
+            $_SESSION['usuario'] = $usuario->getUsuario();
+            $_SESSION['cedula'] = $usuario->getPersona()->getCedula();
+
+            $propietario = new Propietario($_SESSION['cedula']);
+
             $nombre = $usuario->getPersona()->getNombre();
             $apellido = $usuario->getPersona()->getApellido();
-            $_SESSION['nombre'] = $nombre." ".$apellido;
-            
-            header("Location: ctrlInicio.php");
+            $_SESSION['nombre'] = $nombre . " " . $apellido;
 
+            header("Location: ctrlInicio.php");
         } else {
-            
+
             header("Location: ../vista/login.html");
         }
 

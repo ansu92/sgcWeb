@@ -1,7 +1,14 @@
 <?php
-
 session_start();
 
+include '../controlador/ctrlHabitantes.php';
+
+if (isset($_GET['unidad'])) {
+
+    $_SESSION['unidad'] = $_GET['unidad'];
+}
+
+$ctrl = new ctrlHabitantes();
 ?>
 
 <!DOCTYPE html>
@@ -13,7 +20,7 @@ session_start();
         <meta name="author" content="Dashboard">
         <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
 
-        <title>Unidades - SGC Web</title>
+        <title>Habitantes - SGC Web</title>
 
         <!-- Bootstrap core CSS -->
         <link href="assets/css/bootstrap.css" rel="stylesheet">
@@ -46,7 +53,7 @@ session_start();
             <!--main content start-->
             <section id="main-content">
                 <section class="wrapper">
-                    <h3><i class="fa fa-angle-right"></i> Unidades</h3>
+                    <h3><i class="fa fa-angle-right"></i> Unidad <?php $_SESSION['unidad'] ?></h3>
 
                     <!-- Tabla Integrantes -->
                     <div class="row mt">
@@ -68,24 +75,11 @@ session_start();
                                     </thead>
 
                                     <tbody>
-                                        <tr>
-                                            <td>Company Ltd</td>
-                                            <td class="hidden-phone">Lorem Ipsum dolor</td>
-                                            <td>12000.00$ </td>
-                                            <td>
-                                                <button class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></button>
-                                                <button class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Dashgum co</td>
-                                            <td class="hidden-phone">Lorem Ipsum dolor</td>
-                                            <td>17900.00$ </td>
-                                            <td>
-                                                <button class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></button>
-                                                <button class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
-                                            </td>
-                                        </tr>
+
+                                        <?php
+                                        $ctrl->llenarTabla();
+                                        ?>
+
                                     </tbody>
 
                                 </table>
@@ -102,7 +96,7 @@ session_start();
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                     <h4 class="modal-title" id="myModalLabel">Registrar Habitante</h4>
                                 </div>
-                                <form class="form-horizontal style-form" action="../controlador/CtrlHabitante.php?accion=registrar" method="POST">
+                                <form class="form-horizontal style-form" action="../controlador/ctrlFormHabitante.php?accion=registrar" method="POST">
                                     <div class="modal-body">
 
                                         <div class="form-panel">
@@ -151,6 +145,23 @@ session_start();
                                                 <label class="col-sm-2 col-sm-2 control-label">Correo</label>
                                                 <div class="col-sm-10">
                                                     <input type="text" name="correo" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 col-sm-2 control-label">Parentesco</label>
+                                                <div class="col-sm-10">
+                                                    <select name="parentesco" class="form-control">
+                                                        <option>Seleccione...</option>
+                                                        <option value="1">Madre</option>
+                                                        <option value="2">Padre</option>
+                                                        <option value="3">Hijo/Hija</option>
+                                                        <option value="4">Hermano/Hermana</option>
+                                                        <option value="5">Abuelo/Abuela</option>
+                                                        <option value="6">Nieto/Nieta</option>
+                                                        <option value="7">Tío/Tía</option>
+                                                        <option value="8">Sobrino/Sobrina</option>
+                                                        <option value="9">Primo/Prima</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>

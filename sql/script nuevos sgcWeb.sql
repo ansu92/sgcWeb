@@ -2,7 +2,8 @@
 -- habitante
 CREATE TABLE habitante (
 	ci_persona character varying(11) NOT null REFERENCES persona (cedula) PRIMARY KEY,
-	id_unidad integer NOT null REFERENCES unidad (id)
+	id_unidad integer NOT null REFERENCES unidad (id),
+	activo boolean DEFAULT true;
 );
 
 -- puente_propietario_habitante
@@ -13,7 +14,7 @@ CREATE TABLE puente_propietario_habitante (
 );
 
 -- agregar_habitante
--- DROP TABLE habitante ON CASCADE;
+-- DROP FUNCTION agregar_habitante;
 CREATE OR REPLACE FUNCTION agregar_habitante(
 	_cedula character varying,
 	_nombre character varying,
@@ -22,6 +23,9 @@ CREATE OR REPLACE FUNCTION agregar_habitante(
 	_s_apellido character varying,
 	_telefono character varying,
 	_correo character varying,
+	_unidad character varying,
+	_propietario character varying,
+	_parentesco integer,
 	_existe boolean
 ) RETURNS boolean AS $$
 DECLARE
@@ -43,7 +47,7 @@ BEGIN
 	END IF;
 
 	RAISE INFO 'Agregando en la tabla habitante...';
-	INSERT INTO habitante (ci_persona) VALUES (_cedula) ON CONFLICT DO NOTHING;
+	INSERT INTO habitante (ci_persona, id_unidad) VALUES (_cedula, (SELECT id FROM unidad WHERE n_unidad = _unidad)) ON CONFLICT DO NOTHING;
 	GET DIAGNOSTICS resul = ROW_COUNT;
 
 	IF resul <> 1 THEN
@@ -52,13 +56,17 @@ BEGIN
 
 	ELSE
 		RAISE INFO 'Éxito';
-		RETURN true;
+		INSERT INTO puente_propietario_habitante (ci_propietario, ci_habitante, parentesco) VALUES (_propietario, _cedula, _parentesco);
+		GET DIAGNOSTICS resul = ROW_COUNT;
+		
+		IF resul <> 1 THEN
+			RAISE WARNING 'No se pudo agregar en puente_propietario_habitante';
+			RETURN false;
+
+		ELSE
+			RAISE INFO 'Éxito';
+			RETURN true;
+		END IF;
 	END IF;
 END;
 $$ LANGUAGE plpgsql;
-
-SELECT u.id, u.n_unidad, u.n_documento, u.direccion, u.alicuota, id_tipo, tu.tipo 
-FROM unidad AS u 
-INNER JOIN tipo_unidad AS tu ON tu.id = u.id_tipo 
-INNER JOIN puente_unidad_propietarios AS up ON up.id_unidad = u.id
-WHERE u.activo = true AND up.activo = true AND up.ci_propietario = 'V-26942316';

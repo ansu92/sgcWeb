@@ -2,40 +2,62 @@
 
 require_once 'Conexion.php';
 require_once 'Persona.php';
-//require_once 'Unidad.php';
+require_once 'Unidad.php';
 
 class Habitante extends Persona {
-	
-	private $unidad;
 
-	public function __construct() {
+    private $unidad;
+    private $parentesco;
 
-		//$this->unidad = new Unidad();
-	}
+    public function __construct() {
 
-	public function registrar($existe) : bool {
+        $this->unidad = new Unidad();
+    }
 
-		$sql = 'SELECT agregar_habitante(?,?,?,?,?,?,?,?);';
-		$con = Conexion::conectar();
-		$st = $con->prepare($sql);
+    public function registrar($existe): bool {
 
-		$ind = 1;
-		$st->bindParam($ind++, $this->cedula);
-		$st->bindParam($ind++, $this->nombre);
-		$st->bindParam($ind++, $this->sNombre);
-		$st->bindParam($ind++, $this->apellido);
-		$st->bindParam($ind++, $this->sApellido);
-		$st->bindParam($ind++, $this->telefono);
-		$st->bindParam($ind++, $this->correo);
-		$st->bindParam($ind++, $existe);
-		$st->execute();
-		Conexion::desconectar();
+        $sql = 'SELECT agregar_habitante(?,?,?,?,?,?,?,?,?,?,?);';
+        $con = Conexion::conectar();
+        $st = $con->prepare($sql);
 
-		$rs = $st->fetch();
-		$resul = $rs['agregar_habitante'];
+        $ind = 1;
+        $st->bindParam($ind++, $this->cedula);
+        $st->bindParam($ind++, $this->nombre);
+        $st->bindParam($ind++, $this->sNombre);
+        $st->bindParam($ind++, $this->apellido);
+        $st->bindParam($ind++, $this->sApellido);
+        $st->bindParam($ind++, $this->telefono);
+        $st->bindParam($ind++, $this->correo);
+        $st->bindParam($ind++, $_SESSION['unidad']);
+        echo $_SESSION['unidad'];
+        echo $_SESSION['cedula'];
+        $st->bindParam($ind++, $_SESSION['cedula']);
+        $st->bindParam($ind++, $this->parentesco);
+        $st->bindParam($ind++, $existe);
+        $st->execute();
+        Conexion::desconectar();
 
-		return $resul;
-	}
+        $rs = $st->fetch();
+        $resul = $rs['agregar_habitante'];
+
+        return $resul;
+    }
+
+    function getUnidad() {
+        return $this->unidad;
+    }
+
+    function getParentesco() {
+        return $this->parentesco;
+    }
+
+    function setUnidad($unidad) {
+        $this->unidad = $unidad;
+    }
+
+    function setParentesco($parentesco) {
+        $this->parentesco = $parentesco;
+    }
 
 }
 
